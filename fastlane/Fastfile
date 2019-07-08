@@ -26,7 +26,8 @@ lane :submit_testflight do
     output_name: "Cruzall.ipa",
     include_bitcode: false,
     include_symbols: true,
-    export_team_id: team_id
+    export_team_id: team_id,
+    xcargs: "-UseModernBuildSystem=NO"
   )
   
   upload_to_testflight(
