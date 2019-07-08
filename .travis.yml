@@ -1,0 +1,56 @@
+os: osx
+language: objective-c
+osx_image: xcode10.1
+
+cache:
+  directories:
+  - vendor/bundle
+  - "$HOME/flutter/"
+  - "$HOME/.pub-cache"
+
+before_install:
+  - echo $TRAVIS_OS_NAME
+  - echo ${HOME}
+  - echo ${TRAVIS_BUILD_DIR}
+  - brew update
+  - brew install --HEAD usbmuxd
+  - brew unlink usbmuxd
+  - brew link usbmuxd
+  - brew install --HEAD libimobiledevice
+  - brew install ideviceinstaller
+  - brew install ios-deploy
+  - gem install fastlane
+  - gem install cocoapods
+  - if [ ! -d "${HOME}/flutter/bin" ]; then rm -rf ${HOME}/flutter; git clone https://github.com/flutter/flutter.git -b stable --depth 1 ${HOME}/flutter; fi
+  - cd cruzall
+  - ${HOME}/flutter/bin/flutter doctor
+  - ${HOME}/flutter/bin/flutter packages get
+  - ${HOME}/flutter/bin/flutter packages pub run build_runner build
+  - cd cruzawl
+  - ${HOME}/flutter/bin/flutter packages get
+  - ${HOME}/flutter/bin/flutter packages pub run build_runner build
+  - cd ../ios
+  - pod repo update
+  - cd ../..
+
+before_script:
+  - openssl aes-256-cbc -k $CERTIFICATE_PASSWORD -in fastlane/Certificates/distribution.p12.enc -d -a -out fastlane/Certificates/distribution.p12
+  - openssl aes-256-cbc -k $CERTIFICATE_PASSWORD -in fastlane_session.enc -d -a -out fastlane_session
+  - export FASTLANE_SESSION=`cat fastlane_session`
+
+script:
+  - cd cruzall
+  - ${HOME}/flutter/bin/flutter -v build ios --release --no-codesign
+  - cd ..
+  - fastlane submit_testflight
+
+after_success:
+  - echo "success"
+
+after_failure:
+  - echo "failure"
+
+env:
+  global:
+  - secure: YKH9Of7KtundxxY5UzfFRpPW/NViNLUWN1ZeYpQxcpkyfBNu7aTku7gpjVd816huvcITY4eOEKQ0tDuyxauE0V6huLmvgZuYRNek3+7jFUJ1drv8Su6+RSyNtrnV7V1d94/bx4wwp92lA5JDN8yYqbVHmjs4ffFFpk0qZiD8e0tdh5KOP6T4sGz4BBNUgowy1lzB72Bh8zVT/KnytMVQLH9DNk9fLADQQprxbq8bJHtWAQnRV8B7hSGQTkzfQcqXPVN8/3BADLZNQG/2dbt5MfE73D+qES2LUj5yYhICkFE3iAVuq2wtdirE6KVDTqj/VkuxI+PCgVzPKRu/sasict44qy500bbwQxVu4h9XO69mnThA0n7keDTO2UJ05O1e/xcRvuUuONVYYqycPrC1OpNpHya5rXccU5gVTGQ9d6lzXGR59CJ+VhAriPFvOIws/zGGTANJSV5mEQQ8XFMmHLY/P/i5uxqhpWTgRnxHmYmCYUrsa0MAX0z2fx2A3JVHheImGxJn0z3qXIu940UwPxF9X+f5RtgCo7iYHM/M8iaGWqQtnMk/Iji03ivHLBhROFyyY/ZtBMLlRlTNvU33NJ4fRN4z1DeFmiBLHubxa4FxCR2LTOtSirnwBj6OBS0DEIGJTRmrNGHCWIn/5bpj/fjVCKJcIRat0cF7wF2m440=
+  - secure: q9xPtxnH9QXEdJfJtaqnGjIrnXdsFYh5Tzd8owC8SaEaF/9mTV/W0P70/f3tZCUKQQ739yav6ZBPZg+nGTNzz/J9pNumJpL6wnnRCYv+MEn5f76vEtq4VRubRnaY+OVYJ5KOpwx7pCGWyj/dQUh8Wyl7JKA9sz0i/Vi9lQAPgxPrWS274DRhNil7gWg/hGk99E9ZiIiJP3sKibjlz9TxqXMUMWLRTdO9Ad4xmEDSKvT+xKMvXCNkZTUnWfbQap2mT4/9n11l9GpcOLb7GZ2/w1lPW9aIfdfbZKh5r7E5Cw0T40rl/kVJVCnaf3xps+EB7pdEhB4kXHAAjsWwWpwnZ8fUqyGAJhtvZ+5peY1nnoZH/CLWGbMT2ZfqMxRXbitBbXHo301+l9qB+tGgMNe+IhC2qCDYD6decFzXyYhsafRwJJNhl2zPgpCgT732zMSUL1rr9WAphpAEv7rfiYGNhVBJbjxudH8/rhtUC9gQm2g9draG2y/AQsFKrH65Af5rDcAPVSwizWdhGPXl0scfwxd6/3Cfbi9E5VvCQ/dtYWi5CLr8C/V9VKQiSgvXvQdZHVH35qabm5mT9j7fhAqMqHMoHuJIEYy48ZrBzQeMBUtVc5n6MzU/DTztcRfP6N+I9HPCrRPpgrX6S4ZMw5NR+Ivuej+pXOAIVHepvphzgYI=

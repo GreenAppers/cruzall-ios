@@ -1,0 +1,38 @@
+setup_travis
+
+desc "Build and submit to TestFlight"
+lane :submit_testflight do
+  
+  team_id = "9S723G94YQ"
+  cert_id = "Y6TW532U2V"
+  
+  import_certificate(
+    keychain_name: "fastlane_tmp_keychain",
+    certificate_path: "fastlane/Certificates/distribution.p12",
+    certificate_password: ENV["KEY_PASSWORD"]
+  )
+ 
+  sigh(
+    username: "LucidFusionLabs@gmail.com",
+    provisioning_name: "Cruzall Distribution",
+    team_id: team_id,
+    cert_id: cert_id
+  )
+  
+  build_ios_app(
+    export_method: 'app-store',
+    workspace: "cruzall/ios/Runner.xcworkspace",
+    configuration: "Release",
+    output_name: "Cruzall.ipa",
+    include_bitcode: false,
+    include_symbols: true,
+    export_team_id: team_id
+  )
+  
+  upload_to_testflight(
+    username: "LucidFusionLabs@gmail.com",
+    skip_submission: true,
+    skip_waiting_for_build_processing: true
+  )
+
+end
