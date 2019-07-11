@@ -46,6 +46,7 @@ script:
 
 after_success:
   - echo "success"
+  - find . -name "*.ipa" -print
 
 after_failure:
   - echo "failure"
