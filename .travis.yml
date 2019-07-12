@@ -5,7 +5,6 @@ osx_image: xcode10.1
 cache:
   directories:
   - vendor/bundle
-  - "$HOME/flutter/"
   - "$HOME/.pub-cache"
 
 before_install:
@@ -21,15 +20,11 @@ before_install:
   - brew install ios-deploy
   - gem install fastlane
   - gem install cocoapods
-  - if [ ! -d "${HOME}/flutter/bin" ]; then rm -rf ${HOME}/flutter; git clone https://github.com/flutter/flutter.git -b stable --depth 1 ${HOME}/flutter; fi
+  - git clone https://github.com/flutter/flutter.git -b stable --depth 1 ${HOME}/flutter
   - cd cruzall
-  - ${HOME}/flutter/bin/flutter doctor
+  - ${HOME}/flutter/bin/flutter doctor -v
   - ${HOME}/flutter/bin/flutter packages get
-  - ${HOME}/flutter/bin/flutter packages pub run build_runner build
-  - cd cruzawl
-  - ${HOME}/flutter/bin/flutter packages get
-  - ${HOME}/flutter/bin/flutter packages pub run build_runner build
-  - cd ../ios
+  - cd ios
   - pod repo update
   - cd ../..
 
@@ -45,8 +40,8 @@ script:
   - fastlane submit_testflight
 
 after_success:
+  - md5sum ./Cruzall.ipa
   - echo "success"
-  - find . -name "*.ipa" -print
 
 after_failure:
   - echo "failure"
