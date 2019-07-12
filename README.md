@@ -5,5 +5,4 @@
 
 See [parent project](https://github.com/GreenAppers/cruzall)
 
-<img style="float:left" src="screenshot1.jpg" />
-<img style="float:left" src="screenshot2.jpg" />
+<img width=200 src="screenshot1.jpg" /> <img width=200 src="screenshot2.jpg" />
