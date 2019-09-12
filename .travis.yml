@@ -35,6 +35,7 @@ before_script:
 
 script:
   - cd cruzall
+  - ${HOME}/flutter/bin/flutter test
   - ${HOME}/flutter/bin/flutter -v build ios --release --no-codesign
   - cd ..
   - fastlane submit_testflight
