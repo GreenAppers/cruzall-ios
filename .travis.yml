@@ -12,6 +12,7 @@ before_install:
   - echo ${HOME}
   - echo ${TRAVIS_BUILD_DIR}
   - brew update
+  - brew unlink python@2
   - brew install --HEAD usbmuxd
   - brew unlink usbmuxd
   - brew link usbmuxd
