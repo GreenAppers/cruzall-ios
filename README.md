@@ -1,4 +1,4 @@
-## Cruzall for iOS 1.1.3 [![Build Status](https://travis-ci.org/GreenAppers/cruzall-ios.svg?branch=master)](https://travis-ci.org/GreenAppers/cruzall-ios)
+## Cruzall for iOS 1.1.4 [![Build Status](https://travis-ci.org/GreenAppers/cruzall-ios.svg?branch=master)](https://travis-ci.org/GreenAppers/cruzall-ios)
 <img width=128 src="https://www.greenappers.com/cruzall/en/assets/cruzbit.png" /> <img width=128 src="https://www.greenappers.com/cruzall/en/assets/icon.png" />
 
 See [parent project](https://github.com/GreenAppers/cruzall)
